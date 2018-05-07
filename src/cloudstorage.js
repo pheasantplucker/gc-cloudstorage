@@ -6,5 +6,20 @@ const {
   meta,
 } = require('@pheasantplucker/failables')
 const ramda = require('ramda')
+const Storage = require('@google-cloud/storage')
 
-module.exports = {}
+let storage
+
+const createStorageClient = projectId => {
+  try {
+    const newStorage = new Storage({
+      projectId: projectId,
+    })
+    storage = newStorage
+    return success(newStorage)
+  } catch (e) {
+    return failure(e.toString())
+  }
+}
+
+module.exports = { createStorageClient }
