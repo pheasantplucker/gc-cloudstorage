@@ -4,7 +4,8 @@
   "description": "A failables wrapper around Google Cloud's cloud storage",
   "main": "src/cloudstorage.js",
   "scripts": {
-    "test": "mocha ./src/*.spec.js",
+    "test": "babel src --out-dir build && mocha ./build/*.spec.js",
+    "testfast": "mocha ./src/*.spec.js",
     "lint": "esw .eslintrc.js src/ lib/ tests/ -w --fix --ignore-pattern !.eslintrc.js",
     "deploy": "./deploy.sh",
     "main": "./src/cloudstorage.js",
@@ -33,8 +34,9 @@
   },
   "dependencies": {
     "@google-cloud/storage": "^1.6.0",
-    "@pheasantplucker/failables": "^2.0.4",
+    "@pheasantplucker/failables-node6": "^2.0.3",
     "mocha": "^5.1.1",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "uuid": "^3.2.1"
   }
 }

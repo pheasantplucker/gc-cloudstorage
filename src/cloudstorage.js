@@ -1,14 +1,14 @@
 const {
   failure,
   success,
-  payload,
-  isFailure,
-  meta,
-} = require('@pheasantplucker/failables')
-const ramda = require('ramda')
+  // payload,
+  // isFailure,
+} = require('@pheasantplucker/failables-node6')
+// const ramda = require('ramda')
 const Storage = require('@google-cloud/storage')
 
 const noUpperCase = name => {
+  if (name === '' || name === undefined) return false
   const nameRegex = new RegExp(/[A-Z]/)
   const anyUpperCaseMatch = name.match(nameRegex)
   if (anyUpperCaseMatch === null) return true
@@ -60,8 +60,9 @@ const bucketExists = async bucketName => {
   const bucket = storage.bucket(bucketName)
 
   const exists = await bucket.exists()
-  if (exists) {
-    return success(exists)
+  const existsPayload = exists[0]
+  if (existsPayload) {
+    return success(existsPayload)
   }
 
   return failure(exists, { bucketName: bucketName, bucket: bucket })
