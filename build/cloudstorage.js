@@ -4,15 +4,15 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const {
   failure,
-  success,
-  payload,
-  isFailure,
-  meta
+  success
+  // payload,
+  // isFailure,
 } = require('@pheasantplucker/failables-node6');
-const ramda = require('ramda');
+// const ramda = require('ramda')
 const Storage = require('@google-cloud/storage');
 
 const noUpperCase = name => {
+  if (name === '' || name === undefined) return false;
   const nameRegex = new RegExp(/[A-Z]/);
   const anyUpperCaseMatch = name.match(nameRegex);
   if (anyUpperCaseMatch === null) return true;
@@ -69,8 +69,9 @@ const bucketExists = (() => {
     const bucket = storage.bucket(bucketName);
 
     const exists = yield bucket.exists();
-    if (exists) {
-      return success(exists);
+    const existsPayload = exists[0];
+    if (existsPayload) {
+      return success(existsPayload);
     }
 
     return failure(exists, { bucketName: bucketName, bucket: bucket });

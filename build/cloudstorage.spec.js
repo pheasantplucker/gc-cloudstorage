@@ -4,11 +4,10 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 const {
   assertSuccess,
-  assertFailure,
-  payload,
-  isSuccess,
-  isFailure,
-  meta
+  assertFailure
+  // payload,
+  // isSuccess,
+  // isFailure,
 } = require(`@pheasantplucker/failables-node6`);
 const assert = require('assert');
 const equal = assert.deepEqual;
@@ -30,7 +29,7 @@ describe(`createStorageClient()`, () => {
   });
 });
 
-const bucketName = 'testbucket' + uuid.v4();
+const bucketName = 'testbucketteer' + uuid.v4();
 
 describe('createBucket()', () => {
   it('should create a bucket IF IT DOES NOT EXIST', _asyncToGenerator(function* () {
@@ -49,10 +48,24 @@ describe(`bucketExists()`, () => {
     assertSuccess(result);
   }));
   it(`should return False if a bucket doesnt exist`, _asyncToGenerator(function* () {
-    const result = yield bucketExists('awduhniou32hbruihnb12319u5hb1tbR3198trb723287rb325125jj');
-    // someone will make the above bucket and THEN PROBLEMS BEGIN
-    // replace w/ guid?
+    const randomBucket = 'awduhniou32hbruitb' + uuid.v4();
+    const result = yield bucketExists(randomBucket);
     assertFailure(result);
+  }));
+});
+
+// describe(`deleteFiles(query)`, () => {
+// it(`should delete the file in question`, () => {
+// const result = deleteFiles(query )
+// assertSuccess(result)
+// })
+// })
+
+describe(`uploadFile(pathString, options, callback)`, () => {
+  it(`should upload the test file`, _asyncToGenerator(function* () {
+    const testFile = '../test/newFile.txt';
+    const result = yield uploadFile(testFile); //, options, callback
+    assertSuccess(result);
   }));
 });
 

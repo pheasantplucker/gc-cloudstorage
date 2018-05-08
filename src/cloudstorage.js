@@ -1,7 +1,7 @@
 const {
   failure,
   success,
-  // payload,
+  payload,
   // isFailure,
 } = require('@pheasantplucker/failables-node6')
 // const ramda = require('ramda')
@@ -68,9 +68,40 @@ const bucketExists = async bucketName => {
   return failure(exists, { bucketName: bucketName, bucket: bucket })
 }
 
+const uploadFile = async (bucketName, filePath) => {
+  try {
+    const getThisBucket = await getBucket(bucketName)
+    const thisBucket = payload(getThisBucket)
+    const result = await thisBucket.upload(filePath) //pathString, options, callback
+    const response = result[0]
+    return success(result, response)
+  } catch (e) {
+    return failure(e.toString())
+  }
+}
+
+const getBucket = bucketName => {
+  try {
+    const result = storage.bucket(bucketName) //pathString, options, callback
+    const response = result[0]
+    return success(result, response)
+  } catch (e) {
+    return failure(e.toString())
+  }
+}
+
+const newFile = (bucketName, filePath) => {
+  const getThisBucket = getBucket(bucketName)
+  const thisBucket = payload(getThisBucket)
+  const result = thisBucket.file(filePath)
+  return success(result)
+}
 module.exports = {
   createStorageClient,
   createBucket,
   bucketExists,
   noUpperCase,
+  uploadFile,
+  getBucket,
+  newFile,
 }

@@ -10,8 +10,11 @@ const equal = assert.deepEqual
 const {
   createStorageClient,
   createBucket,
+  getBucket,
   bucketExists,
+  uploadFile,
   noUpperCase,
+  newFile,
 } = require('./cloudstorage')
 
 const uuid = require('uuid')
@@ -47,6 +50,35 @@ describe(`bucketExists()`, () => {
     const randomBucket = 'awduhniou32hbruitb' + uuid.v4()
     const result = await bucketExists(randomBucket)
     assertFailure(result)
+  })
+})
+
+describe(`getBucket(bucketName)`, () => {
+  it(`should return a bucketObj`, () => {
+    const result = getBucket(bucketName)
+    assertSuccess(result)
+  })
+})
+// describe(`deleteFiles(query)`, () => {
+// it(`should delete the file in question`, () => {
+// const result = deleteFiles(query )
+// assertSuccess(result)
+// })
+// })
+
+describe(`newFile()`, () => {
+  it(`should return a file object with the path`, () => {
+    const fileTest = 'c:/test.txt'
+    const result = newFile(bucketName, fileTest)
+    assertSuccess(result)
+  })
+})
+
+describe(`uploadFile()`, () => {
+  it(`should upload the test file`, async () => {
+    const testFile = './test/newFile.txt'
+    const result = await uploadFile(bucketName, testFile) //, options, callback
+    assertSuccess(result)
   })
 })
 
