@@ -43,24 +43,23 @@ const bucketExists = async bucketName => {
         'Bucketname contains upper case, or illegal characters. | a-z 0-9 - | only',
     })
   }
-  const bucket = storage.bucket(bucketName)
-
-  const exists = await bucket.exists()
-  const existsPayload = exists[0]
-  if (existsPayload) {
+  try {
+    const bucket = storage.bucket(bucketName)
+    const exists = await bucket.exists()
+    const existsPayload = exists[0]
     return success(existsPayload)
+  } catch (e) {
+    return failure(e.toString())
   }
-
-  return failure(exists, { bucketName: bucketName, bucket: bucket })
 }
 
 async function exists(filename) {
-  const { bucketpart, filepart } = split_filename(filename)
+  const { bucketpart } = split_filename(filename)
   try {
     // first check that the bucket exists
     const r1 = bucketExists(bucketpart)
-    if(isFailure(r1)) return r1
-    if(payload(r1) === false) return success(false)
+    if (isFailure(r1)) return r1
+    if (payload(r1) === false) return success(false)
     const fileHandle = getFileHandle(filename)
     const result = await fileHandle.exists()
     return success(result[0])
@@ -75,8 +74,8 @@ async function save(filename, data) {
     const result = await fileHandle.save(data)
     return success(result)
   } catch (e) {
-    console.log(e.toString())
-    return failure(e.toString())
+    console.log('ERrror: ', JSON.stringify(e))
+    return failure(e)
   }
 }
 
@@ -84,6 +83,17 @@ async function getReadStream(filename, opts) {
   try {
     const fileHandle = getFileHandle(filename)
     const result = fileHandle.createReadStream()
+    return success(result)
+  } catch (e) {
+    console.log(e.toString())
+    return failure(e.toString())
+  }
+}
+
+async function createWriteStream(filename, opts) {
+  try {
+    const fileHandle = getFileHandle(filename)
+    const result = fileHandle.createWriteStream()
     return success(result)
   } catch (e) {
     console.log(e.toString())
@@ -99,8 +109,8 @@ function getFileHandle(filepath) {
 }
 
 function split_filename(n) {
-  const [bucketpart, ...filepartarray] = n.split("/")
-  const filepart = filepartarray.join("/")
+  const [bucketpart, ...filepartarray] = n.split('/')
+  const filepart = filepartarray.join('/')
   return { bucketpart, filepart }
 }
 
@@ -132,6 +142,45 @@ const newFile = (bucketName, filePath) => {
   const result = thisBucket.file(filePath)
   return success(result)
 }
+
+const getFile = async (filePath, opts = {}) => {
+  const readStreamResult = await getReadStream(filePath, opts)
+  const readStream = payload(readStreamResult)
+  return new Promise(resolve => {
+    let buffer = ''
+    readStream.on('data', chunk => {
+      buffer += chunk
+    })
+    readStream.on('end', () => {
+      resolve(success(buffer))
+    })
+  })
+}
+
+async function deleteFile(filename) {
+  try {
+    const fileHandle = getFileHandle(filename)
+    const result = await fileHandle.delete()
+    return success(result)
+  } catch (e) {
+    console.log('Error: ', JSON.stringify(e))
+    return failure(e)
+  }
+}
+
+async function deleteBucket(bucketName) {
+  try {
+    const bucket = getBucket(bucketName)
+    const r1 = payload(bucket)
+    await r1.deleteFiles()
+    const r3 = await r1.delete()
+    return success(r3)
+  } catch (e) {
+    console.log('Error: ', JSON.stringify(e))
+    return failure(e)
+  }
+}
+
 module.exports = {
   createBucket,
   bucketExists,
@@ -141,5 +190,9 @@ module.exports = {
   newFile,
   exists,
   save,
-  getReadStream
+  getReadStream,
+  createWriteStream,
+  getFile,
+  deleteFile,
+  deleteBucket,
 }
