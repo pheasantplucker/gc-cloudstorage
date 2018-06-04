@@ -12,7 +12,6 @@ let exists = (() => {
       const result = yield fileHandle.exists();
       return success(result[0]);
     } catch (e) {
-      console.log(e.toString());
       return failure(e.toString());
     }
   });
@@ -29,8 +28,7 @@ let save = (() => {
       const result = yield fileHandle.save(data);
       return success(result);
     } catch (e) {
-      console.log('ERrror: ', JSON.stringify(e));
-      return failure(e);
+      return failure(e.toString());
     }
   });
 
@@ -46,7 +44,6 @@ let getReadStream = (() => {
       const result = fileHandle.createReadStream();
       return success(result);
     } catch (e) {
-      console.log(e.toString());
       return failure(e.toString());
     }
   });
@@ -63,7 +60,6 @@ let createWriteStream = (() => {
       const result = fileHandle.createWriteStream();
       return success(result);
     } catch (e) {
-      console.log(e.toString());
       return failure(e.toString());
     }
   });
@@ -80,8 +76,7 @@ let deleteFile = (() => {
       const result = yield fileHandle.delete();
       return success(result);
     } catch (e) {
-      console.log('Error: ', JSON.stringify(e));
-      return failure(e);
+      return failure(e.toString());
     }
   });
 
@@ -99,8 +94,7 @@ let deleteBucket = (() => {
       const r3 = yield r1.delete();
       return success(r3);
     } catch (e) {
-      console.log('Error: ', JSON.stringify(e));
-      return failure(e);
+      return failure(e.toString());
     }
   });
 
