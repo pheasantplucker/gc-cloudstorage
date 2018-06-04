@@ -4,12 +4,10 @@
   "description": "A failables wrapper around Google Cloud's cloud storage",
   "main": "src/cloudstorage.js",
   "scripts": {
-    "test": "babel src --out-dir build && mocha ./build/*.spec.js",
-    "testfast": "mocha ./src/*.spec.js",
+    "test": "mocha ./src/*.spec.js",
     "lint": "esw .eslintrc.js src/ lib/ tests/ -w --fix --ignore-pattern !.eslintrc.js",
     "deploy": "./deploy.sh",
     "main": "./src/cloudstorage.js",
-    "build": "babel src --out-dir build"
   },
   "keywords": [
     "google",
@@ -29,8 +27,6 @@
     "eslint-plugin-prettier": "^2.6.0",
     "eslint-watch": "^3.1.3",
     "prettier": "^1.7.4",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
   },
   "dependencies": {
     "@google-cloud/storage": "^1.6.0",
