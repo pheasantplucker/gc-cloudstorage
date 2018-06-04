@@ -153,6 +153,16 @@ const getFile = async (filePath, opts = {}) => {
   })
 }
 
+const stats = async (filename, opts = {}) => {
+  try {
+    const fileHandle = getFileHandle(filename)
+    const result = await fileHandle.getMetadata()
+    return success(result[0])
+  } catch (e) {
+    return failure(e.toString())
+  }
+}
+
 async function deleteFile(filename) {
   try {
     const fileHandle = getFileHandle(filename)
@@ -184,6 +194,7 @@ module.exports = {
   newFile,
   exists,
   save,
+  stats,
   getReadStream,
   createWriteStream,
   getFile,

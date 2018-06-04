@@ -16,6 +16,7 @@ const {
   newFile,
   exists,
   save,
+  stats,
   getReadStream,
   createWriteStream,
   getFile,
@@ -78,6 +79,17 @@ describe('exists()', function() {
     const filepath = `${bucket_that_does_not_exist}/${file_id}.txt`
     const result = await exists(filepath)
     assertSuccess(result, false)
+  })
+})
+
+describe('stats()', function() {
+  this.timeout(540 * 1000)
+  it('should return the various file stats', async function() {
+    const filepath = `${bucketName}/${file_id}.txt`
+    const r1 = await stats(filepath)
+    assertSuccess(r1)
+    const file_stats = payload(r1)
+    equal(file_stats.size, 6)
   })
 })
 
