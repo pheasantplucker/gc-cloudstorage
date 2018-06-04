@@ -64,7 +64,6 @@ async function exists(filename) {
     const result = await fileHandle.exists()
     return success(result[0])
   } catch (e) {
-    console.log(e.toString())
     return failure(e.toString())
   }
 }
@@ -74,8 +73,7 @@ async function save(filename, data) {
     const result = await fileHandle.save(data)
     return success(result)
   } catch (e) {
-    console.log('ERrror: ', JSON.stringify(e))
-    return failure(e)
+    return failure(e.toString())
   }
 }
 
@@ -85,7 +83,6 @@ async function getReadStream(filename, opts) {
     const result = fileHandle.createReadStream()
     return success(result)
   } catch (e) {
-    console.log(e.toString())
     return failure(e.toString())
   }
 }
@@ -96,7 +93,6 @@ async function createWriteStream(filename, opts) {
     const result = fileHandle.createWriteStream()
     return success(result)
   } catch (e) {
-    console.log(e.toString())
     return failure(e.toString())
   }
 }
@@ -163,8 +159,7 @@ async function deleteFile(filename) {
     const result = await fileHandle.delete()
     return success(result)
   } catch (e) {
-    console.log('Error: ', JSON.stringify(e))
-    return failure(e)
+    return failure(e.toString())
   }
 }
 
@@ -176,8 +171,7 @@ async function deleteBucket(bucketName) {
     const r3 = await r1.delete()
     return success(r3)
   } catch (e) {
-    console.log('Error: ', JSON.stringify(e))
-    return failure(e)
+    return failure(e.toString())
   }
 }
 
