@@ -98,16 +98,27 @@ async function createWriteStream(filename, opts) {
 }
 
 function getFileHandle(filepath) {
-  const { bucketpart, filepart } = split_filename(filepath)
-  const bucket = storage.bucket(bucketpart)
-  const file = bucket.file(filepart)
-  return file
+  try {
+    const r1 = split_filename(filepath)
+    if (isFailure(r1)) return r1
+    const splits = payload(r1)
+    const { bucketpart, filepart } = splits
+    const bucket = storage.bucket(bucketpart)
+    const file = bucket.file(filepart)
+    return file
+  } catch (e) {
+    return failure(e.toString())
+  }
 }
 
 function split_filename(n) {
-  const [bucketpart, ...filepartarray] = n.split('/')
-  const filepart = filepartarray.join('/')
-  return { bucketpart, filepart }
+  try {
+    const [bucketpart, ...filepartarray] = n.split('/')
+    const filepart = filepartarray.join('/')
+    return success({ bucketpart, filepart })
+  } catch (e) {
+    return failure(e.toString())
+  }
 }
 
 const uploadFile = async (bucketName, filePath) => {
