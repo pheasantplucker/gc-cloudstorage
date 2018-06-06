@@ -151,17 +151,21 @@ const newFile = (bucketName, filePath) => {
 }
 
 const getFile = async (filePath, opts = {}) => {
-  const readStreamResult = await getReadStream(filePath, opts)
-  const readStream = payload(readStreamResult)
-  return new Promise(resolve => {
-    let buffer = ''
-    readStream.on('data', chunk => {
-      buffer += chunk
+  try {
+    const readStreamResult = await getReadStream(filePath, opts)
+    const readStream = payload(readStreamResult)
+    return new Promise(resolve => {
+      let buffer = ''
+      readStream.on('data', chunk => {
+        buffer += chunk
+      })
+      readStream.on('end', () => {
+        resolve(success(buffer))
+      })
     })
-    readStream.on('end', () => {
-      resolve(success(buffer))
-    })
-  })
+  } catch (e) {
+    return failure(e.toString())
+  }
 }
 
 const stats = async (filename, opts = {}) => {
