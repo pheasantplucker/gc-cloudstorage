@@ -54,7 +54,10 @@ const bucketExists = async bucketName => {
 }
 
 async function exists(filename) {
-  const { bucketpart } = split_filename(filename)
+  const r1 = split_filename(filename)
+  if (isFailure(r1)) return r1
+  const { bucketpart } = payload(r1)
+
   try {
     // first check that the bucket exists
     const r1 = bucketExists(bucketpart)
@@ -163,9 +166,10 @@ const getFile = async (filePath, opts = {}) => {
         resolve(success(buffer))
       })
     })
-  } catch (e) {
-    return failure(e.toString())
-  }
+  }  catch (e) {
+      return failure(e.toString())
+    }
+
 }
 
 const stats = async (filename, opts = {}) => {
