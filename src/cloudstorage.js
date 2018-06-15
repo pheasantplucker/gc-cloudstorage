@@ -70,10 +70,10 @@ async function exists(filename) {
     return failure(e.toString())
   }
 }
-async function save(filename, data) {
+async function save(filename, data, opts = {}) {
   try {
     const fileHandle = getFileHandle(filename)
-    const result = await fileHandle.save(data)
+    const result = await fileHandle.save(data, opts)
     return success(result)
   } catch (e) {
     return failure(e.toString())
