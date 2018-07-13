@@ -83,7 +83,7 @@ async function save(filename, data, opts = {}) {
 async function getReadStream(filename, opts) {
   try {
     const fileHandle = getFileHandle(filename)
-    const result = fileHandle.createReadStream()
+    const result = fileHandle.createReadStream(opts)
     return success(result)
   } catch (e) {
     return failure(e.toString())
@@ -93,7 +93,7 @@ async function getReadStream(filename, opts) {
 async function createWriteStream(filename, opts) {
   try {
     const fileHandle = getFileHandle(filename)
-    const result = fileHandle.createWriteStream()
+    const result = fileHandle.createWriteStream(opts)
     return success(result)
   } catch (e) {
     return failure(e.toString())
