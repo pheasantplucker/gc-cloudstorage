@@ -166,10 +166,9 @@ const getFile = async (filePath, opts = {}) => {
         resolve(success(buffer))
       })
     })
-  }  catch (e) {
-      return failure(e.toString())
-    }
-
+  } catch (e) {
+    return failure(e.toString())
+  }
 }
 
 const stats = async (filename, opts = {}) => {
